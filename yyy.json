@@ -1,0 +1,42 @@
+[
+  {
+    "client": {
+      "name": "ZBIGNIEW",
+      "surname": "ZAMACHOWSKI",
+      "age": 52,
+      "cash": 8300
+    },
+    "products": [
+      {
+        "name": "SAMSUNG S9",
+        "category": "MOBILE",
+        "price": 3100
+      },
+      {
+        "name": "HONDA PRX",
+        "category": "MOTORBIKES",
+        "price": 6900
+      }
+    ]
+  },
+  {
+    "client": {
+      "name": "ADAM",
+      "surname": "NOWAK",
+      "age": 20,
+      "cash": 21300
+    },
+    "products": [
+      {
+        "name": "SUZUKI",
+        "category": "MOTORBIKES",
+        "price": 5100
+      },
+      {
+        "name": "KINDER BUENO",
+        "category": "SWEETS",
+        "price": 3
+      }
+    ]
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "client": {
+      "name": "ADAM",
+      "surname": "NOWAK",
+      "age": 20,
+      "cash": 21300
+    },
+    "products": [
+      {
+        "name": "KINDER BUENO",
+        "category": "SWEETS",
+        "price": 3
+      },
+      {
+        "name": "HONDA PRX",
+        "category": "MOTORBIKES",
+        "price": 6900
+      }
+    ]
+  },
+  {
+    "client": {
+      "name": "ZBIGNIEW",
+      "surname": "ZAMACHOWSKI",
+      "age": 52,
+      "cash": 8300
+    },
+    "products": [
+      {
+        "name": "PS4",
+        "category": "ELECTRONICS",
+        "price": 2000
+      },
+      {
+        "name": "KINDER BUENO",
+        "category": "SWEETS",
+        "price": 3
+      }
+    ]
+  }
+]

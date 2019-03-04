@@ -1,0 +1,18 @@
+{
+  "clientWithProducts": {
+
+    "client":
+    {
+      "name": "Tom",
+      "surname": "Hanks",
+      "age": 22,
+      "cash": 1555
+    },
+    "product":
+      {
+        "name": "CAR",
+        "category": "CAR INDUSTRY",
+        "price": 123
+      }
+  }
+}

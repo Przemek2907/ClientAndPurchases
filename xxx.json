@@ -1,0 +1,122 @@
+[
+  {
+    "client": {
+      "name": "ADAM",
+      "surname": "NOWAK",
+      "age": 20,
+      "cash": 21300
+    },
+    "products": [
+      {
+        "name": "SAMSUNG S9",
+        "category": "MOBILE",
+        "price": 3100
+      },
+      {
+        "name": "PS4",
+        "category": "ELECTRONICS",
+        "price": 1900
+      },
+      {
+        "name": "KINDER BUENO",
+        "category": "SWEETS",
+        "price": 3
+      }
+    ]
+  },
+  {
+    "client": {
+      "name": "TOM",
+      "surname": "HANKS",
+      "age": 42,
+      "cash": 111300
+    },
+    "products": [
+      {
+        "name": "SAMSUNG S9",
+        "category": "MOBILE",
+        "price": 3100
+      },
+      {
+        "name": "XBOX ONE",
+        "category": "ELECTRONICS",
+        "price": 3100
+      }
+    ]
+  },
+  {
+    "client": {
+      "name": "ADAM",
+      "surname": "NOWAK",
+      "age": 20,
+      "cash": 21300
+    },
+    "products": [
+      {
+        "name": "SAMSUNG S9",
+        "category": "MOBILE",
+        "price": 3100
+      },
+      {
+        "name": "PS4",
+        "category": "ELECTRONICS",
+        "price": 1900
+      },
+      {
+        "name": "KINDER BUENO",
+        "category": "SWEETS",
+        "price": 3
+      }
+    ]
+  },
+  {
+    "client": {
+      "name": "JOHN",
+      "surname": "MAYER",
+      "age": 40,
+      "cash": 56300
+    },
+    "products": [
+      {
+        "name": "FENDER STRATOCASTER",
+        "category": "GUITAR",
+        "price": 9100
+      },
+      {
+        "name": "PRS SKY",
+        "category": "GUITAR",
+        "price": 11900
+      },
+      {
+        "name": "TWO ROCK",
+        "category": "GUITAR",
+        "price": 11300
+      }
+    ]
+  },
+  {
+    "client": {
+      "name": "JOE",
+      "surname": "BONAMASSA",
+      "age": 52,
+      "cash": 221300
+    },
+    "products": [
+      {
+        "name": "GIBSON LES PAUL",
+        "category": "GUITAR",
+        "price": 8700
+      },
+      {
+        "name": "VOX AC30",
+        "category": "GUITAR",
+        "price": 4900
+      },
+      {
+        "name": "KINDER BUENO",
+        "category": "SWEETS",
+        "price": 3
+      }
+    ]
+  }
+]
