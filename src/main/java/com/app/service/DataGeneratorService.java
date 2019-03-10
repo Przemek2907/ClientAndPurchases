@@ -6,12 +6,14 @@ import com.app.jsonParser.JsonConverter;
 import com.app.model.Client;
 import com.app.model.ClientWithProducts;
 import com.app.model.Product;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Getter
 public class DataGeneratorService {
 
     private final List<String> jsonFilenames;

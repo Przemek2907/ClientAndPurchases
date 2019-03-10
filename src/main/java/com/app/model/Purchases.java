@@ -1,18 +1,18 @@
 package com.app.model;
 
 import com.app.jsonParser.ObjectToMapMapper;
+import com.app.service.DataGeneratorService;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class Purchases {
-    private Map<Client,Map<Product,Long>> productOrderNumber = new HashMap<>();
+    private Map<Client,Map<Product,Long>> productOrderNumber;
 
     public Purchases() {
         try {
-            productOrderNumber = ObjectToMapMapper.mapOfClientsWhoBoughtProductsManyTimes();
-            //productOrderNumber.forEach((k, v) -> System.out.println(k + "----" + v));
+            productOrderNumber = new DataGeneratorService("xxx.json", "yyy.json", "zzz.json").fromJson();
         }catch (Exception e){
             e.printStackTrace();
         }

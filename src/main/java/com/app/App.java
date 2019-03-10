@@ -6,6 +6,7 @@ import com.app.model.Purchases;
 import com.app.service.ReportsAboutPurchases;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,6 +62,14 @@ public class App {
             System.out.println(k);
             System.out.println(v);
         });
+
+        System.out.println("---------------");
+
+        reportsAboutPurchases.averagePriceInCategory();
+
+        List<Client> clients = reportsAboutPurchases.clientsBuyingMostOften("SWEETS");
+        System.out.println("---------------222");
+        System.out.println(clients);
 
        /* Map<Client, BigDecimal> debtMap = reportsAboutPurchases.doesClientHaveEnoughCash();
        debtMap.forEach((k,v) -> System.out.println(k + " THIS CLIENT'S ACCOUNT BALANCE AFTER SHOPPING EQUALS TO: " + v));*/

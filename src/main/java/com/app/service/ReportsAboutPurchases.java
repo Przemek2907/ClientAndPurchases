@@ -11,18 +11,18 @@ import com.app.jsonParser.ObjectToMapMapper;
 import org.eclipse.collections.impl.collector.Collectors2;
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap;
 
+import java.beans.Customizer;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ReportsAboutPurchases {
-    DataGeneratorService purchases = new DataGeneratorService("xxx.json", "yyy.json", "zzz.json");
-
+    Map<Client, Map<Product, Long>> purchaseMap = new Purchases().getProductOrderNumber();
 
     // 1. FIND A CLIENT, WHO PAID THE MOST FOR ALL THE PRODUCTS
     public Client clientWithAMaximumSumOfExpenses() {
-        return purchases.fromJson().entrySet()
+        return purchaseMap.entrySet()
                 .stream()
                 .max((e1, e2) -> e1.getValue().entrySet().stream().map(product -> product.getKey().getPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)
                         .compareTo(e2.getValue().entrySet().stream().map(product -> product.getKey().getPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)))
@@ -33,7 +33,7 @@ public class ReportsAboutPurchases {
 
     // 2. FIND A CLIENT, WHO PAID THE MOST FOR ALL THE PRODUCTS OF THE SELECTED CATEGORY
     public Client clientWithMaximumSumOfExpensesInSelectedCategory(String categoryName) {
-        return purchases.fromJson().entrySet()
+        return purchaseMap.entrySet()
                 .stream()
                 .max((e1, e2) -> e1.getValue().entrySet().stream().filter(product -> product.getKey().getCategory().equals(categoryName)).map(
                         product -> product.getKey().getPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)
@@ -44,14 +44,15 @@ public class ReportsAboutPurchases {
                 .get();
     }
 
-    // Wykonaj zestawienie (mapę), w którym pokażesz wiek klientów oraz
-    //kategorie produktów, które najchętniej w tym wieku kupowano.
+
+
+    // A Map showing the most popular category or products grouped by age of a customer
 
     // teraz mam: Map<Client, Map<Product, Long>>
 
-    public Map<Integer, String> productCategoriesByAge() {
+    public Map<Integer, List<String>> productCategoriesByAge() {
 
-        return purchases.fromJson().entrySet()
+        Map<Integer, Map<String, Long>> grouped = purchaseMap.entrySet()
                 .stream()
                 .collect(Collectors.toMap(
                         e -> e.getKey(),
@@ -63,105 +64,125 @@ public class ReportsAboutPurchases {
 
                         )
                 )
+
                 .entrySet()
                 .stream()
                 .peek((x) -> System.out.println(x.getKey() + "111--" + x.getValue()))
                 .collect(Collectors.toMap(
                         ee -> ee.getKey().getAge(),
-                        ee -> ee.getValue().stream().collect(Collectors.groupingBy(Product::getCategory, Collectors.counting()))
-                                .entrySet()
-                                .stream()
-                                .peek((x) -> System.out.println(x.getKey() + "--" + x.getValue()))
-                                .max(Comparator.comparingLong(Map.Entry::getValue))
-                                .orElseThrow(() -> new MyException("AAA"))
-                                .getKey(),
-                        (x1, x2) -> x1 + " AND " + x2
-                ));
-    }
+                        ee -> {
+                            Map<String, Long> groupedCategories = ee.getValue().stream().map(Product::getCategory).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+                            return groupedCategories;
+                        },
+                        (v1, v2) -> {
+                            Map<String, Long> m3 = new HashMap<>();
+                            m3.putAll(v1);
+                            v2.forEach((k, v) -> {
+                                if (m3.containsKey(k)) {
+                                    m3.put(k, m3.get(k) + v);
+                                } else {
+                                    m3.put(k, v);
+                                }
+                            });
+                            return m3;
+                        })
+                );
 
-
-       /* return purchases.fromJson().entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        e -> e.getKey(),
-                        e -> e.getValue()
-                                .entrySet()
-                                .stream()
-                                .flatMap(ee -> Collections.nCopies(ee.getValue().intValue(), ee.getKey()).stream())
-
-
-                        )
-                )
+        return grouped
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(
-                        eee -> eee.getKey().getAge(),
-                        eee -> eee.getValue()
-                                .collect(Collectors.groupingBy(Product::getCategory, Collectors.counting()))
-                                .entrySet()
-                                .stream().min((e1, e2) -> Long.compare(e2.getValue(), e1.getValue()))
-                                .orElseThrow(() -> new MyException("AAA"))
-                                .getKey()
-                ));*/
+                        e -> e.getKey(),
+                        e -> {
+                            Long maxVal = e.getValue().entrySet().stream().sorted((e1, e2) -> Long.compare(e2.getValue(), e1.getValue())).findFirst().orElse(null).getValue();
+                            return e.getValue().entrySet().stream().filter(ee -> ee.getValue().equals(maxVal)).map(Map.Entry::getKey).collect(Collectors.toList());
+                        })
+                );
+    }
 
 
-    // 3. Wykonaj zestawienie (mapę), w którym pokażesz średnią cenę produktów
-    //w danej kategorii. Dodatkowo wyznacz dla każdej kategorii produkt
-    //najdroższy oraz produkt najtańszy.
+
+    // 3. A map with the average price in given category.
+    // Additionally it depicts the most expensive and the cheapest product per each category
 
 
     //Map<String, BigDecimal>
 
-    /*public void averagePriceInCategory (){
-       Map<String, List<Product>> categoryAndAmountOfProducts =  purchases.fromJson()
+    public void averagePriceInCategory() {
+        Map<String, List<Product>> categoryAndAmountOfProducts = purchaseMap
                 .entrySet()
                 .stream()
-                .map(
-                        p -> p.getValue().keySet().stream().collect(Collectors.groupingBy(
-                                e -> e.getCategory()
-                        ))
-                        .entrySet()
-                        .stream()
-                        .collect(
-                                Collectors.toMap(
-                                        p.getValue().keySet().stream().map(t->t.getCategory()).findFirst().get(),
-                                        p.getValue().keySet().stream().collect(Collectors.toList())
-                                )
-                        )
-                )
-               .*/
+                .flatMap(e -> e.getValue().entrySet().stream().flatMap(ee -> Collections.nCopies(ee.getValue().intValue(), ee.getKey()).stream()))
+                .collect(Collectors.groupingBy(Product::getCategory));
 
-    // 4. Wyznacz klientów, którzy kupowali najczęściej produkty danej
-    //kategorii. Otrzymane zestawienie zwracaj w postaci mapy.
-
-    public Map<Client,String> clientsBuyingMostOften (){
-        return purchases.fromJson()
+        Map<String, BigDecimal> averagePrices = categoryAndAmountOfProducts
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(
                         e -> e.getKey(),
-                        e -> e.getValue()
-                                .entrySet()
-                                .stream()
-                                .flatMap(ee -> Collections.nCopies(ee.getValue().intValue(), ee.getKey()).stream())
-                                .collect(Collectors.toList())
+                        e -> e.getValue().stream().collect(Collectors2.summarizingBigDecimal(Product::getPrice)).getAverage())
+                );
+        System.out.println(averagePrices);
 
-                )
+        Map<String, Product> maxPricesProducts = categoryAndAmountOfProducts
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        e -> e.getKey(),
+                        e -> e.getValue().stream().max(Comparator.comparing(Product::getPrice)).orElseThrow(() -> new MyException("EX")))
+                );
+        System.out.println(maxPricesProducts);
+
+        Map<String, Product> minPricesProducts = categoryAndAmountOfProducts
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        e -> e.getKey(),
+                        e -> e.getValue().stream().min(Comparator.comparing(Product::getPrice)).orElseThrow(() -> new MyException("EX")))
+                );
+        System.out.println(minPricesProducts);
+    }
+
+
+    // 4. Wyznacz klientów, którzy kupowali najczęściej produkty danej
+    //    //kategorii. Otrzymane zestawienie zwracaj w postaci mapy.
+
+    // 4. Clients buying products the most often in selected category.
+
+
+    public List<Client> clientsBuyingMostOften(String category) {
+        Map<Client, Long> categoriesCounter = purchaseMap
+                .entrySet()
+                .stream()
+                .filter(e -> e.getValue().entrySet().stream().anyMatch(ee -> ee.getKey().getCategory().equals(category)))
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()
+                        .entrySet()
+                        .stream()
+                        .flatMap(ee -> Collections.nCopies(ee.getValue().intValue(), ee.getKey()).stream())
+                        .filter(p -> p.getCategory().equals(category)).count()
+                ));
+        Long maxVal = categoriesCounter.entrySet().stream().max(Comparator.comparingLong(e -> e.getValue())).orElse(null).getValue();
+
+        return categoriesCounter
+                .entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(maxVal))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
 
     }
 
 
-    // 5. Sprawdź, czy klient jest w stanie zapłacić za zakupy. Żeby
-    //to stwierdzić, porównaj wartość pola przechowującego ilość gotówki,
-    //którą posiada klient z sumaryczną ceną za zakupy klienta. Wykonaj
-    //mapę, w której jako klucz podasz klienta, natomiast jako wartość
-    //przechowasz dług, który klient musi spłacić za niezapłacone zakupy.
-    //Dług stanowi różnica pomiędzy kwotą do zapłaty oraz gotówką, którą
-    //posiada klient.
+
+
+    // 5. Checking if client is able to pay for his purchases. Returns a map
+    // with a client and the result of this calculation:
+    // minus if client has a debt - not able to pay;
+    // and the the account balance when he is able to pay;
 
 
     public Map<Client, BigDecimal> doesClientHaveEnoughCash() {
-        return purchases.fromJson()
+        return purchaseMap
                 .entrySet()
                 .stream()
                 .collect(Collectors.toMap(
@@ -180,6 +201,7 @@ public class ReportsAboutPurchases {
                 );
     }
 }
+
 
 
 
